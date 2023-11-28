@@ -1,14 +1,23 @@
 # app/app.py
-from flask import Flask
+from flask import Flask, g
+from flask_cors import CORS
 from routes.cursos_routes import cursos_routes
-from config import DB_CONFIG
-from db import get_db
+from config import get_config
+from db import close_db, get_db
 
 app = Flask(__name__)
-app.config['DB_CONFIG'] = DB_CONFIG
+CORS(app)
 
-# # Registrar las rutas
-app.register_blueprint(cursos_routes)
+# Registrar las rutas
+@app.before_request
+def before_request():
+    g.db = get_db()
+
+@app.teardown_request
+def teardown_request(exception=None):
+    close_db(exception)
 
 if __name__ == '__main__':
-    app.run(debug=True)
+    app.config.from_object(get_config())
+    app.register_blueprint(cursos_routes)
+    app.run()
