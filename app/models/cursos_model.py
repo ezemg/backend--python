@@ -12,7 +12,7 @@ def obtener_cursos():
             datos = cursor.fetchall()
 
             # Construye la lista de cursos con la información obtenida de la base de datos
-            cursos = [{'codigo': fila[0], 'nombre': fila[1], 'creditos': fila[2]} for fila in datos]
+            cursos = [{'codigo': fila[0], 'nombre': fila[1], 'descripcion': fila[2], 'img': fila[3]} for fila in datos]
 
         # Devuelve un diccionario con la lista de cursos, un mensaje y la cantidad de cursos
         return {'cursos': cursos, 'mensaje': 'Cursos listados', 'count': len(cursos)}
@@ -22,12 +22,12 @@ def obtener_cursos():
         app.logger.error("Error obteniendo cursos: %s", ex)
         return {'error': str(ex), 'status_code': 500}
 
-def registrar_curso(nombre, creditos):
+def registrar_curso(nombre, descripcion, img):
     try:
        from app import app
        with get_db().cursor() as cursor:
-            sql = '''INSERT INTO curso (nombre, creditos)
-                     VALUES('{0}', '{1}')'''.format(nombre, creditos)
+            sql = '''INSERT INTO curso (nombre, descripcion, img)
+                     VALUES('{0}', '{1}', '{2}')'''.format(nombre, descripcion, img)
             cursor.execute(sql)
 
             get_db().commit()
@@ -38,12 +38,12 @@ def registrar_curso(nombre, creditos):
         app.logger.error("Error registrando curso: %s", ex)
         return {'error': str(ex), 'status_code': 500}
 
-def actualizar_curso(id_curso, nombre, creditos):
+def actualizar_curso(id_curso, nombre, descripcion, img):
     try:
        from app import app
        with get_db().cursor() as cursor:
-            sql = '''UPDATE curso SET nombre = '{0}', creditos = '{1}'
-                     WHERE idcurso = '{2}' '''.format(nombre, creditos, id_curso)
+            sql = '''UPDATE curso SET nombre = '{0}', descripcion = '{1}', img '{2}'
+                     WHERE idcurso = '{3}' '''.format(nombre, descripcion, img, id_curso)
             cursor.execute(sql)
 
             get_db().commit()

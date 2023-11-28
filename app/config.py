@@ -9,11 +9,11 @@ class Config:
 class DevelopmentConfig(Config):
     DEBUG = True
     DB_CONFIG = {
-        'host': 'localhost',
-        'user': 'root',
-        'password': 'Flor2019!',
-        'database': 'codoacodo',
-        'port': 3306
+        'host': os.environ.get('DB_HOST'),
+        'user': os.environ.get('DB_USER'),
+        'password': os.environ.get('DB_PASSWORD'),
+        'database': os.environ.get('DB_DATABASE'),
+        'port': os.environ.get('DB_PORT')
     }
 
 class ProductionConfig(Config):
